@@ -10,40 +10,47 @@ app.use(bodyParser.json());
 
 const Movie = sequelize.define("movie", {
   title: {
-    type: Sequelize.TEXT
+    type: Sequelize.TEXT,
+    allowNull: false
   },
   yearOfRelease: {
-    type: Sequelize.INTEGER
+    type: Sequelize.INTEGER,
+    allowNull: false
   },
   synopsis: {
-    type: Sequelize.TEXT
+    type: Sequelize.TEXT,
+    allowNull: false
   }
 });
 
-sequelize.sync().then(() => console.log("Tables created successfully"));
-// Inserting 3 example new rows
-// .then(() =>
-//   Promise.all([
-//     Movie.create({
-//       title: "Movie 1",
-//       yearOfRelease: "2001",
-//       synopsis: "Synopsis movie 1"
-//     }),
-//     Movie.create({
-//       title: "Movie 2",
-//       yearOfRelease: "2002",
-//       synopsis: "Synopsis movie 2"
-//     }),
-//     Movie.create({
-//       title: "Movie 3",
-//       yearOfRelease: "2003",
-//       synopsis: "Synopsis movie 3"
-//     })
-//   ])
-// ).catch(err => {
-//   console.error("Unable to create tables", err);
-//   process.exit(1);
-// })
+sequelize
+  .sync()
+  .then(() => console.log("Tables created successfully"))
+  // Inserting 3 initial example new rows:
+  //(Commenting this out so it doesn't stack up these three examples every time we start the web server)
+
+  // .then(() =>
+  //   Promise.all([
+  //     Movie.create({
+  //       title: "Movie 1",
+  //       yearOfRelease: "2001",
+  //       synopsis: "Synopsis movie 1"
+  //     }),
+  //     Movie.create({
+  //       title: "Movie 2",
+  //       yearOfRelease: "2002",
+  //       synopsis: "Synopsis movie 2"
+  //     }),
+  //     Movie.create({
+  //       title: "Movie 3",
+  //       yearOfRelease: "2003",
+  //       synopsis: "Synopsis movie 3"
+  //     })
+  //   ])
+  // )
+  .catch(err => {
+    console.error("Unable to create tables", err);
+  });
 
 // Adding a movie to the collection:
 app.post("/movies", (req, res, next) => {

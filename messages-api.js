@@ -4,9 +4,7 @@ const bodyParser = require("body-parser");
 const jsonParser = bodyParser.json();
 const port = 3000;
 
-app.use(jsonParser);
-
-// Middleware to count requests:
+// Middleware to limit the number of requests:
 let counter = 0;
 
 const countingMiddleware = (req, res, next) => {
@@ -18,50 +16,20 @@ const countingMiddleware = (req, res, next) => {
 };
 
 app.use(countingMiddleware);
+app.use(jsonParser);
 
-// app.post("/messages", (req, res) => {
-//   console.log(req.body);
-//   res.json({
-//     message: `This is the message being sent`
-//   });
-// });
-
-app.post("/messages", (req, res) => {
-  console.log(
-    "####################################################################################" /* ,
-    res.json(req.body) */
-  );
-
+app.post("/messages", (req, res, next) => {
   const key = Object.keys(req.body);
-  // const value = Object.values(req.body);
+  const value = Object.values(req.body);
 
-  // console.log("value is", req.body[key]);
-  // console.log("value's length is", req.body[key].length);
-  // console.log("key is", key);
-
-  console.log("req.body is", req.body);
-
+  // Validation: if theres no valid property or string:
   if (!key || !req.body[key]) {
     res.status(400).end();
   } else {
+    console.log("req.body object is:", req.body);
+    console.log(`req.body as a text message is: "${key}: ${value}"`);
     res.json(req.body);
   }
 });
 
 app.listen(port, () => console.log(`Listening on port ${port}!`));
-
-// 1. Perform the following validation: if the body does NOT have a `text` property or the string is empty,
-// then send a "Bad Request" HTTP status code to the client. //400
-
-// if (typeof req.body === "string") {
-//   console.log("is object");
-//   res.status(400).end();
-// }
-
-// https://reader.codaisseur.com/courses/advanced-bootcamp/02-rest-apis/express/express-middleware
-
-// app.post("/messages", (req, res) => {
-//   req.body = { message: "This is the message being sent" };
-//   res.json(req.body);
-//   console.log(req.body.message);
-// });
